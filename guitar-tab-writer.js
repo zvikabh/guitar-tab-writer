@@ -4,7 +4,20 @@ const fretHeaders = ['E', 'B', 'G', 'D', 'A', 'E'];
 var tabs = [];
 
 function clickFret(row, col) {
-  tabs.push({row: row, col: col});
+  let chord = {};
+  chord[row] = col + '';
+  tabs.push(chord);
+  regenerateText();
+}
+
+function clickRest() {
+  tabs.push({0: '-'});
+  regenerateText();
+}
+
+function clickEndMeasure() {
+  const endMeasure = {0: '|', 1: '|', 2: '|', 3: '|', 4: '|', 5: '|'}
+  tabs.push(endMeasure);
   regenerateText();
 }
 
@@ -13,16 +26,19 @@ function regenerateText() {
   for (var i = 0; i < 6; ++i) {
     lines[i] = fretHeaders[i] + '|-';
   }
-  tabs.forEach(elem => {
+  tabs.forEach(chord => {
+    let chordChars = 0;
+    for (const [row, col] of Object.entries(chord)) {
+      if (col.length > chordChars) {
+        chordChars = col.length;
+      }
+    }
+    chordChars++;  // Spacer after the chord.
     for (var row = 0; row < 6; ++row) {
-      if (row == elem.row) {
-        lines[row] += elem.col + '-';
+      if (row in chord) {
+        lines[row] += (chord[row] + '').padEnd(chordChars, '-');
       } else {
-        if (elem.col < 10) {
-          lines[row] += '--';
-        } else {
-          lines[row] += '---';
-        }
+        lines[row] += ''.padEnd(chordChars, '-');
       }
     }
   });

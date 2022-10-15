@@ -31,6 +31,14 @@ html, body {
 .fret-cell {
   background-color: #888;
 }
+#cmds {
+  display: flex;
+  flex-direction: row;
+  padding-top: 10px;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+}
 #tabs {
   height: 100%;
   padding: 10px 0;
