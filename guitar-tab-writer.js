@@ -1,6 +1,9 @@
 'use strict';
 
-const fretHeaders = ['E', 'B', 'G', 'D', 'A', 'E'];
+const FRET_HEADERS = ['E', 'B', 'G', 'D', 'A', 'E'];
+const CONNECTED_SUFFIXES = new Set(['b', 'h', 's', 'r']);
+const BLANK_ROWS_BETWEEN_TABS = 2;
+
 var tabs = [];
 
 function clickFret(row, col) {
@@ -21,10 +24,13 @@ function clickRest() {
   regenerateText();
 }
 
-function clickEndMeasure() {
+function addToAllStrings(text) {
   endChord();
-  const endMeasure = {0: '|', 1: '|', 2: '|', 3: '|', 4: '|', 5: '|'}
-  tabs.push(endMeasure);
+  const chord = {}
+  for (let i = 0; i < 6; ++i) {
+    chord[i] = text;
+  }
+  tabs.push(chord);
   regenerateText();
 }
 
@@ -34,28 +40,57 @@ function clickBackspace() {
   regenerateText();
 }
 
+function addSuffix(suffix) {
+  if (tabs.length == 0) {
+    return;
+  }
+  let chord = tabs[tabs.length - 1];
+  for (const key of Object.keys(chord)) {
+    chord[key] += suffix;
+  }
+  regenerateText();
+}
+
 function endChord() {
   $('#chord-checkbox')[0].checked = false;
 }
 
 function regenerateText() {
-  let lines = ['', '', '', '', '', ''];
+  let rowNum = 0;
+  const linesPerRow = 6 + BLANK_ROWS_BETWEEN_TABS;
+  let lines = [];
   for (var i = 0; i < 6; ++i) {
-    lines[i] = fretHeaders[i] + '|-';
+    lines.push(FRET_HEADERS[i] + '|-');
   }
   tabs.forEach(chord => {
+    if (chord[0] == 'newline') {
+      rowNum++;
+      for (let i = 0; i < BLANK_ROWS_BETWEEN_TABS; ++i) {
+        lines.push('');
+      }
+      for (let i = 0; i < 6; ++i) {
+        lines.push(FRET_HEADERS[i] + '|-');
+      }
+      return;
+    }
     let chordChars = 0;
+    let addSpacer = true;
     for (const [row, col] of Object.entries(chord)) {
       if (col.length > chordChars) {
         chordChars = col.length;
+        if (CONNECTED_SUFFIXES.has(col[col.length - 1])) {
+          addSpacer = false;
+        }
       }
     }
-    chordChars++;  // Spacer after the chord.
+    if (addSpacer) {
+      chordChars++;  // Spacer after the chord.
+    }
     for (var row = 0; row < 6; ++row) {
       if (row in chord) {
-        lines[row] += (chord[row] + '').padEnd(chordChars, '-');
+        lines[row + rowNum*linesPerRow] += (chord[row] + '').padEnd(chordChars, '-');
       } else {
-        lines[row] += ''.padEnd(chordChars, '-');
+        lines[row + rowNum*linesPerRow] += ''.padEnd(chordChars, '-');
       }
     }
   });
@@ -69,7 +104,7 @@ $(document).ready(() => {
     fretsContainer.append($('<div class="fret-header">').text(fret));
   }
   for (var row = 0; row < 6; ++row) {
-    fretsContainer.append($('<div class="string-header">').text(fretHeaders[row]));
+    fretsContainer.append($('<div class="string-header">').text(FRET_HEADERS[row]));
     for (var col = 0; col < 24; ++col) {
       let elem = $('<div class="fret-cell" id="fret-cell-' + row + '-' + col + '">');
       elem.click(clickFret.bind(null, row, col));

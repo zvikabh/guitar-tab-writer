@@ -18,8 +18,17 @@
   <div id="frets"></div>
   <div id="cmds">
     <input type="button" value="Rest" onclick="clickRest();">
-    <input type="button" value="|" onclick="clickEndMeasure();">
+    <input type="button" value="|" onclick="addToAllStrings('|');">
+    <input type="button" value="|:" onclick="addToAllStrings('|:');">
+    <input type="button" value=":|" onclick="addToAllStrings(':|');">
+    <input type="button" value="%" onclick="addToAllStrings('%');">
+    <input type="button" value="v" onclick="addSuffix('v');">
+    <input type="button" value="h" onclick="addSuffix('b');">
+    <input type="button" value="h" onclick="addSuffix('h');">
+    <input type="button" value="s" onclick="addSuffix('s');">
+    <input type="button" value="h" onclick="addSuffix('r');">
     <input type="button" value="Backspace" onclick="clickBackspace();">
+    <input type="button" value="↲" onclick="addToAllStrings('newline');">
     <div title="To create a chord, click the first note, then click Chord, and then click the second note. Repeat for any additional notes in the chord.">
       <input type="checkbox" id="chord-checkbox">
       <label for="chord-checkbox">Chord</label>
