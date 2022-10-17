@@ -4,21 +4,38 @@ const fretHeaders = ['E', 'B', 'G', 'D', 'A', 'E'];
 var tabs = [];
 
 function clickFret(row, col) {
-  let chord = {};
-  chord[row] = col + '';
-  tabs.push(chord);
+  if ($('#chord-checkbox')[0].checked && tabs.length > 0) {
+    tabs[tabs.length - 1][row] = col + '';
+  } else {
+    let chord = {};
+    chord[row] = col + '';
+    tabs.push(chord);
+  }
+  endChord();
   regenerateText();
 }
 
 function clickRest() {
+  endChord();
   tabs.push({0: '-'});
   regenerateText();
 }
 
 function clickEndMeasure() {
+  endChord();
   const endMeasure = {0: '|', 1: '|', 2: '|', 3: '|', 4: '|', 5: '|'}
   tabs.push(endMeasure);
   regenerateText();
+}
+
+function clickBackspace() {
+  endChord();
+  tabs.pop();
+  regenerateText();
+}
+
+function endChord() {
+  $('#chord-checkbox')[0].checked = false;
 }
 
 function regenerateText() {

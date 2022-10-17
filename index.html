@@ -19,6 +19,11 @@
   <div id="cmds">
     <input type="button" value="Rest" onclick="clickRest();">
     <input type="button" value="|" onclick="clickEndMeasure();">
+    <input type="button" value="Backspace" onclick="clickBackspace();">
+    <div title="To create a chord, click the first note, then click Chord, and then click the second note. Repeat for any additional notes in the chord.">
+      <input type="checkbox" id="chord-checkbox">
+      <label for="chord-checkbox">Chord</label>
+    </div>
   </div>
   <div id="tabs">
     <textarea readonly id="tabs-text"></textarea>
