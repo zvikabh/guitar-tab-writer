@@ -1,6 +1,6 @@
 'use strict';
 
-const FRET_HEADERS = ['E', 'B', 'G', 'D', 'A', 'E'];
+const FRET_HEADERS = ['e', 'B', 'G', 'D', 'A', 'E'];
 const CONNECTED_SUFFIXES = new Set(['b', 'h', 's', 'r']);
 const BLANK_ROWS_BETWEEN_TABS = 2;
 
@@ -108,6 +108,9 @@ $(document).ready(() => {
     for (var col = 0; col < 24; ++col) {
       let elem = $('<div class="fret-cell" id="fret-cell-' + row + '-' + col + '">');
       elem.click(clickFret.bind(null, row, col));
+      elem.append($('<div class="string ' + FRET_HEADERS[row] + '-string">'));
+      elem.append($('<div class="fret-edge">').append(
+          $('<div class="string ' + FRET_HEADERS[row] + '-string">')));
       fretsContainer.append(elem);
     }
   }
